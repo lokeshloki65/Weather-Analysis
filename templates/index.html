@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-time Weather Analysis</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🌤️ Real-time Weather Analysis</h1>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        async function getWeather() {
+            const city = document.getElementById("city").value;
+            const res = await fetch("/weather", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ city })
+            });
+            const data = await res.json();
+            const result = document.getElementById("result");
+            if (data.error) {
+                result.innerHTML = `<p class="error">${data.error}</p>`;
+            } else {
+                result.innerHTML = `
+                    <h3>Weather in ${data.city}</h3>
+                    <p>🌡️ Temperature: ${data.temperature} °C</p>
+                    <p>💧 Humidity: ${data.humidity}%</p>
+                    <p>📈 Pressure: ${data.pressure} hPa</p>
+                    <p>🌥️ Weather: ${data.weather}</p>
+                    <p>💨 Wind Speed: ${data.wind_speed} m/s</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
